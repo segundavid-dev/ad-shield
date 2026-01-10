@@ -15,6 +15,11 @@ export default defineBackground(() => {
     "juicyads.com",
     "trafficjunky.net",
     "popads.net",
+    "ad-maven.com",
+    "yllix.com",
+    "revenuehits.com",
+    "bitmedia.io",
+    "coinzilla.com",
   ];
 
   // Load initial state
@@ -54,11 +59,12 @@ export default defineBackground(() => {
           condition: {
             urlFilter: `*://*.${domain}/*`,
             resourceTypes: [
+              "main_frame",
               "sub_frame",
               "script",
               "image",
               "xmlhttprequest",
-            ] as browser.declarativeNetRequest.ResourceType[],
+            ] as any,
           },
         }));
 

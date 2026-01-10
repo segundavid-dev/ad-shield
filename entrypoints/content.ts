@@ -1,3 +1,5 @@
+import { isMaliciousUrl } from "@/lib/ad-shield-utils";
+
 export default defineContentScript({
   matches: ["<all_urls>"],
   runAt: "document_idle",
@@ -18,23 +20,6 @@ export default defineContentScript({
     let clickedElement: HTMLElement | null = null;
     let suspiciousRedirectCount = 0;
 
-    const MALICIOUS_DOMAINS: string[] = [
-      "betting",
-      "casino",
-      "porn",
-      "xxx",
-      "adult",
-      "sex",
-      "cam",
-      "dating",
-      "hookup",
-      "ads",
-      "popads",
-      "propellerads",
-      "exoclick",
-      "juicyads",
-      "trafficjunky",
-    ];
 
     const LEGITIMATE_POPUPS_INDICATORS: string[] = [
       "login",
@@ -140,34 +125,6 @@ export default defineContentScript({
       );
     };
 
-    const isMaliciousUrl = (url: string): boolean => {
-      try {
-        const UrlObj = new URL(url);
-        const domain = UrlObj.hostname.toLowerCase();
-        const path = UrlObj.pathname.toLowerCase();
-        const search = UrlObj.search.toLowerCase();
-
-        // check domains against common malicious patterns
-        const isDomainSuspicious = MALICIOUS_DOMAINS.some((pattern) =>
-          domain.includes(pattern)
-        );
-
-        // check suspicious URL patterns
-        const hasSuspiciousParams =
-          search.includes("popup") ||
-          search.includes("redirect") ||
-          search.includes("affiliate");
-
-        const suspiciousTlds = [".tk", ".ml", ".ga", ".cf", ".pw"];
-        const hasSuspiciousTld = suspiciousTlds.some((tld) =>
-          domain.endsWith(tld)
-        );
-
-        return isDomainSuspicious || hasSuspiciousParams || hasSuspiciousTld;
-      } catch {
-        return false;
-      }
-    };
 
     // remove popups banners
     const removeCustomPopups = (root: ParentNode = document) => {
@@ -278,49 +235,7 @@ export default defineContentScript({
       subtree: true,
     });
 
-    // Intercept navigation attempts
-    window.addEventListener("beforeunload", (e) => {
-      if (userJustClicked() && isLegitimateClick(clickedElement)) {
-        console.log("Allowing legitimate navigation");
-        return;
-      }
 
-      if (!userJustClicked()) {
-        console.log("Blocked suspicious redirect.");
-        e.preventDefault();
-      }
-    });
-
-    // intercept JS based redirects
-    const originAssign = window.location.assign;
-    const originReplace = window.location.replace;
-
-    // window.location.assign = function (url: string) {
-    //   if (isMaliciousUrl(url)) {
-    //     console.log("Blocked redirect to", url);
-    //   }
-
-    //   if (!userJustClicked() || !isLegitimateClick(clickedElement)) {
-    //     console.log("Blocked JS redirect to:", url);
-    //     suspiciousRedirectCount++;
-    //     return;
-    //   }
-    //   originAssign.call(window.location, url);
-    // };
-
-    // window.location.replace = function (url: string) {
-    //   if (isMaliciousUrl(url)) {
-    //     console.log("Blocked malicious JS replace to:", url);
-    //     return;
-    //   }
-
-    //   if (!userJustClicked() || !isLegitimateClick(clickedElement)) {
-    //     console.log("Blocked suspicious JS replace to:", url);
-    //     return;
-    //   }
-
-    //   originReplace.call(window.location, url);
-    // };
 
     // Remove click hijacking
     document.addEventListener("click", (e) => {
