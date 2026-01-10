@@ -6,9 +6,10 @@ export const DEFAULT_MALICIOUS_DOMAINS: string[] = [
   "megaurl", "adbull", "clicksfly", "shrinkme", "exe.io", "gplinks"
 ];
 
-export const isMaliciousUrl = (url: string, maliciousDomains: string[] = DEFAULT_MALICIOUS_DOMAINS): boolean => {
+export const isMaliciousUrl = (url: string | URL, maliciousDomains: string[] = DEFAULT_MALICIOUS_DOMAINS): boolean => {
   try {
-    const UrlObj = new URL(url);
+    const base = typeof window !== "undefined" ? window.location.origin : undefined;
+    const UrlObj = new URL(url.toString(), base);
     const domain = UrlObj.hostname.toLowerCase();
     const search = UrlObj.search.toLowerCase();
 

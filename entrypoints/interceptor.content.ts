@@ -5,12 +5,9 @@ export default defineContentScript({
   world: "MAIN",
   runAt: "document_start",
   main() {
-    const originAssign = window.location.assign;
-    const originReplace = window.location.replace;
+    console.log("[AdShield] Interceptor active");
 
-    console.log("AdShield Interceptor active");
-
-    // Click tracking in MAIN world to allow legitimate redirects
+    // Click tracking to allow legitimate redirects
     let lastUserClick = 0;
     document.addEventListener("click", () => {
       lastUserClick = Date.now();
@@ -18,49 +15,58 @@ export default defineContentScript({
 
     const userJustClicked = () => Date.now() - lastUserClick < 2000;
 
-    window.location.assign = function (url: string) {
-      if (isMaliciousUrl(url)) {
-        console.log("[AdShield] Blocked malicious JS redirect (assign) to:", url);
-        return;
-      }
+    // Helper to decorate native methods safely
+    const decorate = (obj: any, prop: string, wrapper: Function) => {
+      try {
+        const original = obj[prop];
+        if (typeof original !== 'function') return;
 
-      if (!userJustClicked()) {
-        console.log("[AdShield] Blocked suspicious JS redirect (assign) to:", url);
-        return;
+        obj[prop] = function(...args: any[]) {
+          return wrapper.call(this, original, ...args);
+        };
+      } catch (e) {
+        console.warn(`[AdShield] Failed to intercept ${prop}:`, e);
       }
-      
-      return originAssign.call(window.location, url);
     };
 
-    window.location.replace = function (url: string) {
+    // Intercept window.location.assign
+    decorate(window.location, 'assign', (original: Function, url: string) => {
       if (isMaliciousUrl(url)) {
-        console.log("[AdShield] Blocked malicious JS redirect (replace) to:", url);
+        console.log("[AdShield] Blocked malicious redirect (assign):", url);
         return;
       }
-
       if (!userJustClicked()) {
-        console.log("[AdShield] Blocked suspicious JS redirect (replace) to:", url);
+        console.log("[AdShield] Blocked suspicious redirect (assign):", url);
         return;
       }
+      return original.call(window.location, url);
+    });
 
-      return originReplace.call(window.location, url);
-    };
-    
-    // Also intercept window.open
-    const originalOpen = window.open;
-    window.open = function(url?: string | URL, target?: string, features?: string) {
+    // Intercept window.location.replace
+    decorate(window.location, 'replace', (original: Function, url: string) => {
+      if (isMaliciousUrl(url)) {
+        console.log("[AdShield] Blocked malicious redirect (replace):", url);
+        return;
+      }
+      if (!userJustClicked()) {
+        console.log("[AdShield] Blocked suspicious redirect (replace):", url);
+        return;
+      }
+      return original.call(window.location, url);
+    });
+
+    // Intercept window.open
+    decorate(window, 'open', (original: Function, url?: string | URL, target?: string, features?: string) => {
       const urlString = url?.toString() || "";
       if (urlString && isMaliciousUrl(urlString)) {
-        console.log("[AdShield] Blocked malicious window.open to:", urlString);
+        console.log("[AdShield] Blocked malicious window.open:", urlString);
         return null;
       }
-      
       if (urlString && !userJustClicked()) {
-        console.log("[AdShield] Blocked suspicious window.open to:", urlString);
+        console.log("[AdShield] Blocked suspicious window.open:", urlString);
         return null;
       }
-      
-      return originalOpen.call(window, url, target, features);
-    };
+      return original.call(window, url, target, features);
+    });
   },
 });
