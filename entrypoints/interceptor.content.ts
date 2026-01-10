@@ -8,15 +8,6 @@ export default defineContentScript({
     const originAssign = window.location.assign;
     const originReplace = window.location.replace;
 
-    let currentMaliciousDomains: string[] = [];
-
-    window.addEventListener("AdShield:UpdateFilters", (e: any) => {
-      if (e.detail && e.detail.maliciousDomains) {
-        currentMaliciousDomains = e.detail.maliciousDomains;
-        console.log("[AdShield] Interceptor updated malicious domains:", currentMaliciousDomains.length);
-      }
-    });
-
     console.log("AdShield Interceptor active");
 
     // Click tracking in MAIN world to allow legitimate redirects
@@ -28,7 +19,7 @@ export default defineContentScript({
     const userJustClicked = () => Date.now() - lastUserClick < 2000;
 
     window.location.assign = function (url: string) {
-      if (isMaliciousUrl(url, currentMaliciousDomains)) {
+      if (isMaliciousUrl(url)) {
         console.log("[AdShield] Blocked malicious JS redirect (assign) to:", url);
         return;
       }
@@ -42,7 +33,7 @@ export default defineContentScript({
     };
 
     window.location.replace = function (url: string) {
-      if (isMaliciousUrl(url, currentMaliciousDomains)) {
+      if (isMaliciousUrl(url)) {
         console.log("[AdShield] Blocked malicious JS redirect (replace) to:", url);
         return;
       }
@@ -59,7 +50,7 @@ export default defineContentScript({
     const originalOpen = window.open;
     window.open = function(url?: string | URL, target?: string, features?: string) {
       const urlString = url?.toString() || "";
-      if (urlString && isMaliciousUrl(urlString, currentMaliciousDomains)) {
+      if (urlString && isMaliciousUrl(urlString)) {
         console.log("[AdShield] Blocked malicious window.open to:", urlString);
         return null;
       }
