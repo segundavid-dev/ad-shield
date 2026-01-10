@@ -14,37 +14,17 @@ export default defineBackground(() => {
   const adSelectors: string[] = [];
   const maliciousDomains = DEFAULT_MALICIOUS_DOMAINS;
 
-  // Load initial state
-  browser.storage.local.get("blockerEnabled").then((res) => {
-    blockerEnabled = res.blockerEnabled ?? false;
-    setupBlockingRules();
-  });
-
-  // Listen for storage changes
-  browser.storage.onChanged.addListener((changes, area) => {
-    if (area === "local" && changes.blockerEnabled) {
-      blockerEnabled = changes.blockerEnabled.newValue;
-      setupBlockingRules();
-    }
-  });
-
   // Setup declarative blocking rules
   const setupBlockingRules = async () => {
     try {
-      // Clear existing rules first
-      const existingRules =
-        await browser.declarativeNetRequest.getDynamicRules();
-      const ruleIds = existingRules.map((rule) => rule.id);
+      // Fetch existing dynamic rules to clear them
+      const existingRules = await browser.declarativeNetRequest.getDynamicRules();
+      const removeRuleIds = existingRules.map((rule) => rule.id);
 
-      if (ruleIds.length > 0) {
-        await browser.declarativeNetRequest.updateDynamicRules({
-          removeRuleIds: ruleIds,
-        });
-      }
-
-      // Add new rules if blocker is enabled
+      // Prepare new rules if enabled
+      let addRules: any[] = [];
       if (blockerEnabled) {
-        const rules = adDomains.map((domain, index) => ({
+        addRules = adDomains.map((domain, index) => ({
           id: index + 1,
           priority: 1,
           action: { type: "block" as const },
@@ -59,19 +39,37 @@ export default defineBackground(() => {
             ] as any,
           },
         }));
+      }
 
-        await browser.declarativeNetRequest.updateDynamicRules({
-          addRules: rules,
-        });
+      // Perform atomic update: remove old, add new
+      await browser.declarativeNetRequest.updateDynamicRules({
+        removeRuleIds,
+        addRules,
+      });
 
-        console.log(`Added ${rules.length} blocking rules`);
+      if (blockerEnabled) {
+        console.log(`Successfully updated ${addRules.length} blocking rules`);
       } else {
-        console.log("Blocker disabled - no rules added");
+        console.log("Blocker disabled - cleared all rules");
       }
     } catch (error) {
       console.error("Error setting up blocking rules:", error);
     }
   };
+
+  // Load initial state
+  browser.storage.local.get("blockerEnabled").then((res) => {
+    blockerEnabled = res.blockerEnabled ?? false;
+    setupBlockingRules();
+  });
+
+  // Listen for storage changes
+  browser.storage.onChanged.addListener((changes, area) => {
+    if (area === "local" && changes.blockerEnabled) {
+      blockerEnabled = changes.blockerEnabled.newValue;
+      setupBlockingRules();
+    }
+  });
 
   // Handle messages from popup
   browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
