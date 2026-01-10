@@ -170,10 +170,11 @@ export default defineContentScript({
     };
 
     // remove popups banners
-    const removeCustomPopups = () => {
-      const popups = document.querySelectorAll("div, iframe");
+    const removeCustomPopups = (root: ParentNode = document) => {
+      const popups = root.querySelectorAll("div, iframe");
 
       popups.forEach((el) => {
+        if (!(el instanceof HTMLElement)) return;
         const style = window.getComputedStyle(el);
 
         if (
@@ -181,24 +182,26 @@ export default defineContentScript({
           parseInt(style.zIndex) > 1000 &&
           el.clientHeight > window.innerHeight * 0.5
         ) {
+          console.log("Removing custom popup:", el);
           el.remove();
         }
       });
     };
 
-    const adBlock = () => {
+    const adBlock = (root: ParentNode = document) => {
       let blockedCount = 0;
 
       AD_SELECTORS.forEach((selector) => {
         try {
-          const ads = document.querySelectorAll(selector);
-          console.log(`Found ${ads.length} ads for selector: ${selector}`);
+          const ads = root.querySelectorAll(selector);
+          if (ads.length > 0) {
+            console.log(`Found ${ads.length} ads for selector: ${selector}`);
+          }
 
           ads.forEach((ad) => {
             const element = ad as HTMLElement;
 
             if (isLegitimatePopup(element)) {
-              console.log(`Skipping legitimate element: ${selector}`);
               return;
             }
 
@@ -206,11 +209,11 @@ export default defineContentScript({
             blockedCount++;
           });
         } catch (error) {
-          console.log(`Error with ${selector}`);
+          // Silent fail for invalid selectors or removed nodes
         }
       });
 
-      removeCustomPopups();
+      removeCustomPopups(root);
     };
 
     // remove suspicious iframes
@@ -254,20 +257,23 @@ export default defineContentScript({
     });
 
     const observer = new MutationObserver((mutations) => {
-      let hasNewNodes = false;
-
       mutations.forEach((mutation) => {
-        if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
-          hasNewNodes = true;
-        }
-
-        if (hasNewNodes) {
-          adBlock();
+        if (mutation.type === "childList") {
+          mutation.addedNodes.forEach((node) => {
+            if (node instanceof HTMLElement) {
+              // Check the node itself
+              adBlock(node);
+              // Check if the node's parent should be scanned if it's small
+              if (node.parentElement) {
+                adBlock(node.parentElement);
+              }
+            }
+          });
         }
       });
     });
 
-    observer.observe(document.body, {
+    observer.observe(document.documentElement, {
       childList: true,
       subtree: true,
     });
@@ -329,9 +335,9 @@ export default defineContentScript({
       }
     });
 
-    setInterval(removeCustomPopups, 2000);
-    setInterval(adBlock, 10000);
-    setInterval(removeSuspiciousIframesAndScripts, 8000);
+    // Minimal background scanning for elements that might have changed state without a mutation
+    setInterval(() => adBlock(document), 30000);
+    setInterval(removeSuspiciousIframesAndScripts, 15000);
 
     // cleanup function for observer
     window.addEventListener("beforeunload", () => {
