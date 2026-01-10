@@ -4,10 +4,16 @@ export default defineContentScript({
   matches: ["<all_urls>"],
   runAt: "document_idle",
   async main() {
-    // Read toggle state from extension storage
-    const { blockerEnabled } = await browser.storage.local.get(
-      "blockerEnabled"
-    );
+    // Read toggle state and dynamic filters from extension storage
+    const { 
+      blockerEnabled, 
+      adSelectors: remoteSelectors, 
+      maliciousDomains: remoteDomains 
+    } = await browser.storage.local.get([
+      "blockerEnabled",
+      "adSelectors",
+      "maliciousDomains"
+    ]);
 
     // early return
     if (!blockerEnabled) {
@@ -15,6 +21,13 @@ export default defineContentScript({
       return;
     }
     console.log("Ad-shield is on");
+
+    // Notify MAIN world interceptor of malicious domains
+    if (remoteDomains) {
+      window.dispatchEvent(new CustomEvent("AdShield:UpdateFilters", {
+        detail: { maliciousDomains: remoteDomains }
+      }));
+    }
 
     let lastUserClick = 0;
     let clickedElement: HTMLElement | null = null;
@@ -36,7 +49,7 @@ export default defineContentScript({
       "terms",
     ];
 
-    const AD_SELECTORS: string[] = [
+    const AD_SELECTORS: string[] = Array.from(new Set([
       // Google Ads
       "ins.adsbygoogle",
       'iframe[src*="googlesyndication"]',
@@ -74,7 +87,9 @@ export default defineContentScript({
       'iframe[src*="juicyads"]',
       'iframe[src*="trafficjunky"]',
       'iframe[src*="popads"]',
-    ];
+      
+      ...(remoteSelectors || [])
+    ]));
 
     // Define all functions first
     const userJustClicked = () => {
