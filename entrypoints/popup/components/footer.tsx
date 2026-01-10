@@ -14,28 +14,28 @@ export default function Footer() {
           backgroundColor: "#1a1a1a",
           padding: "10px",
           borderRadius: "8px",
+          fontSize: "14px",
+          lineHeight: "1.5",
         }}
       >
-        <p>
-          Turn on Ad Shield. It helps annoying Ads and unsafe element to provide
-          you with a clean and safe browsering environment.
-          <span
-            style={{
-              marginLeft: "8px",
-              verticalAlign: "middle",
-              cursor: "pointer",
-            }}
-          >
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Info size={16} />
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                <span>Blocks ads • Protect Privacy</span>
-              </TooltipContent>
-            </Tooltip>
-          </span>
-        </p>
+        Turn on Ad Shield. It helps annoying Ads and unsafe element to provide
+        you with a clean and safe browsering environment.
+        <span
+          style={{
+            marginLeft: "8px",
+            verticalAlign: "middle",
+            cursor: "pointer",
+          }}
+        >
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Info size={16} />
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <span>Blocks ads • Protect Privacy</span>
+            </TooltipContent>
+          </Tooltip>
+        </span>
       </div>
     </TooltipProvider>
   );

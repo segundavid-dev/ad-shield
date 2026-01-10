@@ -17,7 +17,7 @@ export default function ToggleSwitch({ enabled, onChange }: toggleSwitchProps) {
         transition: "background-color 0.3s ease-in-out",
       }}
     >
-      <span
+      <div
         style={{
           display: "inline-block",
           width: "28px",
@@ -44,7 +44,7 @@ export default function ToggleSwitch({ enabled, onChange }: toggleSwitchProps) {
             }}
           ></div>
         )}
-      </span>
+      </div>
     </button>
   );
 }
