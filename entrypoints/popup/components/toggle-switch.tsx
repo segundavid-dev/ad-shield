@@ -8,43 +8,28 @@ export default function ToggleSwitch({ enabled, onChange }: toggleSwitchProps) {
         position: "relative",
         display: "inline-flex",
         alignItems: "center",
-        width: "75px",
-        height: "40px",
-        borderRadius: "50px",
-        border: "none",
+        width: "60px",
+        height: "30px",
+        borderRadius: "0px",
+        border: "3px solid #000",
         cursor: "pointer",
-        backgroundColor: enabled ? "#10b981" : "#9ca3af",
-        transition: "background-color 0.3s ease-in-out",
+        backgroundColor: enabled ? "var(--neo-success)" : "#fff",
+        boxShadow: "2px 2px 0px #000",
+        transition: "all 0.1s",
+        padding: 0,
       }}
     >
       <div
         style={{
           display: "inline-block",
-          width: "28px",
-          height: "28px",
-          borderRadius: "50%",
-          backgroundColor: "white",
-          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-          transform: enabled ? "translateX(20px)" : "translateX(1px)",
-          transition: "transform 0.3s ease-in-out",
+          width: "20px",
+          height: "20px",
+          backgroundColor: "#000",
+          transform: enabled ? "translateX(31px)" : "translateX(3px)",
+          transition: "transform 0.1s ease-in-out",
           position: "relative",
         }}
-      >
-        {enabled && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "100%",
-              width: "100%",
-              color: "#10b981",
-              fontWeight: "bold",
-              fontSize: "12px",
-            }}
-          ></div>
-        )}
-      </div>
+      ></div>
     </button>
   );
 }

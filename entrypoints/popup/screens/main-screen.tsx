@@ -9,14 +9,17 @@ export default function MainScreen() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: "1rem",
-        justifyContent: "center",
+        justifyContent: "space-between",
         minHeight: "100%",
         overflow: "hidden",
+        padding: "1rem",
+        backgroundColor: "#f0f0f0",
       }}
     >
       <Header />
-      <ActivateBlocker />
+      <div style={{ flex: 1, display: "flex", alignItems: "center", width: "100%" }}>
+        <ActivateBlocker />
+      </div>
       <Footer />
     </div>
   );
