@@ -19,7 +19,7 @@ export default function OnboardScreen() {
         }}
       >
         <ShieldCheck size={64} />
-        <h1>Ad-Shield</h1>
+        <h1>AD-SHIELD</h1>
       </div>
     </div>
   );

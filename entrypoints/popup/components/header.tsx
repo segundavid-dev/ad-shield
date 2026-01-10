@@ -4,7 +4,7 @@ export default function Header() {
       <h1
         style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "3rem" }}
       >
-        Ad-Shield
+        AD-SHIELD
       </h1>
     </div>
   );
