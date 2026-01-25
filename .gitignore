@@ -7,11 +7,16 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Build artifacts
 node_modules
+dist
 .output
+.wxt
+web/dist
+extension/.output
+extension/.wxt
 stats.html
 stats-*.json
-.wxt
 web-ext.config.ts
 
 # Editor directories and files

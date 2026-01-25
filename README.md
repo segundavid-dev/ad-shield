@@ -1,101 +1,52 @@
-# AdShield
+# AdShield Monorepo
 
-**Lightweight ad blocker that blocks intrusive ads, popups and malicious redirects for a smoother browsing experience**
+**AdShield** is a lightweight ad blocker designed to provide a clean, safe, and distraction-free browsing experience. This repository is structured as a monorepo containing both the browser extension and its landing page.
 
-> Transform your web browsing into a clean, safe, and distraction free experience
+## Project Structure
 
-<!-- [Download Ad-Shield from Chrome Web Store](#) -->
+- **[extension/](file:///c:/Users/David/Desktop/AdShield/extension)**: The core Ad-Shield browser extension built with the WXT framework.
+- **[web/](file:///c:/Users/David/Desktop/AdShield/web)**: A modern landing page for the project built with Vite, React, and Tailwind CSS.
 
+## Getting Started
 
-## Why Built This?
+### Prerequisites
 
-Web browsing (especially when downloading media) has become increasingly frustrated by intrusive ads, popups, and redirect attacks that compromise both user experience and security. After experiencing countless interruptions and seeing how existing solutions were either resource-heavy or missed critical threats, I decided to build a lightweight yet powerful alternative.
+- [pnpm](https://pnpm.io/) (Recommended)
 
-AdShield was born from a desire to build a robust solution from the ground up that:
-
-- Blocks ads without impacting browser performance
-- Protects against malicious redirects and pop-ups
-- Maintains legitimate website functionality
-- Provides users with control and transparency
-
-The goal was to create a safe browsing environment while mastering modern browser APIs in a real-world scenario.
-
-## Built With
-
-- **WXT Framework** - Modern web extension framework
-- **React** - User interface components
-- **TypeScript** - Type safe development
-- **Tailwind CSS** - Styling framework
-- **Lucide React** - Icon library
-
-
-### Screens
-
-- **Inactive blocker**
-  ![Inactive](adblock-inactive.PNG)
-
-- **Active blocker**
-  ![Active](adblock-active.PNG)
-
-
-### What Gets Blocked
-
-- **Display Ads**
-- **Popup Ads**:
-- **Redirect Attacks**
-- **Tracking Scripts**
-- **Malicious Iframes**
-
-## Development
-
-Want to contribute or run Ad-Shield locally?
+### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/sgundavid-dev/ad-shield
+git clone https://github.com/segundavid-dev/ad-shield.git
 
 # Navigate to project directory
 cd AdShield
 
-# Install dependencies
+# Install dependencies for the entire workspace
 pnpm install
-
-# Start development server
-pnpm run dev
 ```
 
-### Project Structure
+### Development
 
+```bash
+# Start the browser extension in development mode
+pnpm run dev:extension
+
+# Start the web landing page in development mode
+pnpm run dev:web
 ```
-.
-├── adblock-active.PNG
-├── adblock-inactive.PNG
-├── assets/
-├── components/
-├── components.json
-├── context/
-├── core-components.md
-├── entrypoints/
-│   ├── background.ts
-│   ├── content.ts
-│   └── popup/
-├── hooks/
-├── lib/
-├── package.json
-├── pnpm-lock.yaml
-├── public/
-├── README.md
-├── tsconfig.json
-├── types.ts
-└── wxt.config.ts
-```
+
+## Design System
+
+The project uses a **Neo-Brutalist** design aesthetic across both the extension and the landing page, characterized by:
+- High-contrast colors (Neo-Success, Neo-Accent, etc.)
+- Bold, thick borders (2px solid black)
+- Harsh shadows (4px offset)
+- Space Grotesk typography
 
 ## Contributing
 
-Contributions are welcome! Here's how you can help:
+Contributions are welcome! Please open an issue or submit a pull request.
 
-1. **Report Issues**: Found a bug or have a feature request? Open an issue
-2. **Submit PRs**: Fork the repo, create a branch, and submit a pull request
-3. **Test & Feedback**: Try the extension and share your experience
-
-Thanks for reading! :)
+---
+Built with ❤️ for a better web.
