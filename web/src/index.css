@@ -43,3 +43,8 @@
     @apply border-2 border-black p-3 w-full bg-white font-bold outline-none shadow-neo focus:shadow-neo-hover transition-all;
   }
 }
+
+
+body{
+  cursor:cell;
+}
