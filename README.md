@@ -36,13 +36,6 @@ pnpm run dev:extension
 pnpm run dev:web
 ```
 
-## Design System
-
-The project uses a **Neo-Brutalist** design aesthetic across both the extension and the landing page, characterized by:
-- High-contrast colors (Neo-Success, Neo-Accent, etc.)
-- Bold, thick borders (2px solid black)
-- Harsh shadows (4px offset)
-- Space Grotesk typography
 
 ## Contributing
 

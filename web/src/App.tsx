@@ -59,11 +59,11 @@ function App() {
             <div className="space-y-4">
                <div className="flex justify-between items-center bg-gray-100 border-2 border-black p-3 shadow-neo">
                   <span className="font-black text-sm uppercase">Ads Blocked</span>
-                  <span className="bg-black text-white px-2 py-0.5 font-black">12,402</span>
+                  {/* <span className="bg-black text-white px-2 py-0.5 font-black">12,402</span> */}
                </div>
                <div className="flex justify-between items-center bg-gray-100 border-2 border-black p-3 shadow-neo">
                   <span className="font-black text-sm uppercase">Trackers Blocked</span>
-                  <span className="bg-black text-white px-2 py-0.5 font-black">841</span>
+                  {/* <span className="bg-black text-white px-2 py-0.5 font-black">841</span> */}
                </div>
             </div>
           </div>
