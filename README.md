@@ -6,24 +6,19 @@
 
 <!-- [Download Ad-Shield from Chrome Web Store](#) -->
 
-**Latest Updates:**
 
-- **Ad Detection**:
-- **Malicious Redirect Protection**:
-- **Lightweight Performance**:
+## Why Built This?
 
-## Why Did I Build This ?
+Web browsing (especially when downloading media) has become increasingly frustrated by intrusive ads, popups, and redirect attacks that compromise both user experience and security. After experiencing countless interruptions and seeing how existing solutions were either resource-heavy or missed critical threats, I decided to build a lightweight yet powerful alternative.
 
-Web browsing(Downloading animes) has become increasingly frustrating with intrusive ads, popups, and redirect attacks that compromise both user experience and security. After experiencing countless interruptions while browsing and seeing how existing solutions were either too heavy or missed critical threats, I decided to build a lightweight yet powerful solution.
+AdShield was born from a desire to build a robust solution from the ground up that:
 
-AdShield was born from the need for a browser extension that i can build myself from scratch to:
-
-- Blocks ads without slowing down your browser
+- Blocks ads without impacting browser performance
 - Protects against malicious redirects and pop-ups
 - Maintains legitimate website functionality
 - Provides users with control and transparency
 
-The goal was simple: create a safe browsing environment while learning and leveraging the browser APIs and build a real life extension scenerio.
+The goal was to create a safe browsing environment while mastering modern browser APIs in a real-world scenario.
 
 ## Built With
 
@@ -33,37 +28,15 @@ The goal was simple: create a safe browsing environment while learning and lever
 - **Tailwind CSS** - Styling framework
 - **Lucide React** - Icon library
 
-### User Experience
-
-- **Lightweight Design**: Fast loading with minimal resource usage
-- **Real time Statistics**: See how many ads and trackers you've blocked
-- **One click Toggle**: Easily enable/disable protection
-- **Clean Interface**: Simple, intuitive user interface
 
 ### Screens
 
-- Inactive blocker
-  ![Inactive](inactive-page.PNG)
+- **Inactive blocker**
+  ![Inactive](adblock-inactive.PNG)
 
-- Activate blocker
-  ![Active](active-page.PNG)
+- **Active blocker**
+  ![Active](adblock-active.PNG)
 
-<!-- ## 🔧 Installation
-
-### From Chrome Web Store (Recommended)
-
-1. Visit the Chrome Web Store
-2. Search for "Ad-Shield" or use the direct link
-3. Click "Add to Chrome"
-4. Click the Ad-Shield icon in your toolbar to start protecting your browsing -->
-
-<!-- ### Manual Installation (Development)
-
-1. Download the latest release
-2. Open Chrome Extensions page (`chrome://extensions/`)
-3. Enable "Developer mode"
-4. Click "Load unpacked" and select the extension folder
-5. Ad-Shield is now ready to protect your browsing -->
 
 ### What Gets Blocked
 
@@ -79,7 +52,7 @@ Want to contribute or run Ad-Shield locally?
 
 ```bash
 # Clone the repository
-git clone https://github.com/Segundavid-Dev/AdShield
+git clone https://github.com/sgundavid-dev/ad-shield
 
 # Navigate to project directory
 cd AdShield
@@ -95,30 +68,23 @@ pnpm run dev
 
 ```
 .
-├── README.md
-├── active-page.PNG
-├── assets
-├── components
+├── adblock-active.PNG
+├── adblock-inactive.PNG
+├── assets/
+├── components/
 ├── components.json
-├── context
-│   ├── SwitchContext.tsx
-│   └── SwitchProvider.tsx
+├── context/
 ├── core-components.md
-├── entrypoints
-│   ├── background.ts
-│   ├── content.ts
-│   └── popup
-├── hooks
-│   └── useSwitch.ts
-├── inactive-page.PNG
-├── lib
-│   └── utils.ts
-├── node_modules
+├── entrypoints/
+│   ├── background.ts
+│   ├── content.ts
+│   └── popup/
+├── hooks/
+├── lib/
 ├── package.json
 ├── pnpm-lock.yaml
-├── public
-│   ├── icon
-│   └── wxt.svg
+├── public/
+├── README.md
 ├── tsconfig.json
 ├── types.ts
 └── wxt.config.ts
