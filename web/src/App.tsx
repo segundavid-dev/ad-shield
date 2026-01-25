@@ -2,10 +2,8 @@ import { ShieldCheck, ShieldAlert, Zap, Globe, Github, Chrome } from "lucide-rea
 
 function App() {
   return (
-    <main className="min-h-screen w-full flex flex-col items-center justify-center p-4 md:p-8">
-      {/* Background patterns could go here */}
-      
-      <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+    <main className="min-h-screen w-full flex flex-col items-center justify-center p-4 md:p-8">      
+      <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         
         {/* Left Side: Hero Text */}
         <div className="space-y-6">
@@ -70,14 +68,19 @@ function App() {
             </div>
           </div>
 
-          {/* Decorative floating boxes */}
-          <div className="absolute -top-4 -right-4 w-16 h-16 bg-neo-warning border-2 border-black shadow-neo z-0"></div>
-          <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-neo-accent/20 border-2 border-black border-dashed z-0 opacity-50"></div>
+          {/* Decorative floating boxes & fragments */}
+          <div className="absolute -top-12 -right-12 w-24 h-24 bg-neo-warning border-4 border-black shadow-neo z-0 rotate-12 transition-transform hover:-rotate-6 duration-500 hidden md:block"></div>
+          <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-neo-accent/10 border-2 border-black border-dashed z-0 -rotate-12 hidden md:block"></div>
+          
+          {/* Smaller floating fragments to fill the gaps */}
+          <div className="absolute top-0 -left-20 w-8 h-8 bg-black z-0 rotate-45 hidden lg:block"></div>
+          <div className="absolute bottom-1/3 -right-24 w-12 h-12 border-4 border-black bg-neo-success z-0 -rotate-12 hidden lg:block shadow-neo"></div>
+          <div className="absolute -bottom-12 right-12 w-10 h-10 bg-white border-2 border-black shadow-neo z-0 rotate-45 hidden md:block"></div>
         </div>
       </div>
 
       {/* Features Section */}
-      <div className="max-w-4xl w-full mt-24 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="max-w-5xl w-full mt-24 grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="neo-card hover:bg-neo-warning transition-colors group">
           <Zap size={32} strokeWidth={3} className="mb-4 group-hover:scale-110 transition-transform" />
           <h3 className="text-xl font-black uppercase mb-2">Lightning Fast</h3>
@@ -99,7 +102,7 @@ function App() {
 
       {/* Footer */}
       <footer className="mt-24 pb-8 text-center font-black uppercase tracking-widest text-sm opacity-60">
-        AdShield &copy; 2026 • Built for the community
+        AdShield &copy; 2026 • Built with ❤ for the community
       </footer>
     </main>
   );
