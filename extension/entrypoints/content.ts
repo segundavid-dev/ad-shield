@@ -4,22 +4,27 @@ export default defineContentScript({
   matches: ["<all_urls>"],
   runAt: "document_idle",
   async main() {
-    // Read toggle state from extension storage
-    const { blockerEnabled } = await browser.storage.local.get(
-      "blockerEnabled"
+    const { blockerEnabled } = await browser.storage.local.get("blockerEnabled");
+
+    // Always dispatch current state to MAIN world (interceptor.content.ts)
+    document.dispatchEvent(
+      new CustomEvent("adshield:state", { detail: { enabled: blockerEnabled ?? false } })
     );
 
-    // early return
+    // Forward state changes to MAIN world
+    browser.storage.onChanged.addListener((changes, area) => {
+      if (area === "local" && changes.blockerEnabled) {
+        document.dispatchEvent(
+          new CustomEvent("adshield:state", { detail: { enabled: changes.blockerEnabled.newValue } })
+        );
+      }
+    });
+
     if (!blockerEnabled) {
       console.log("Ad-shield is off");
       return;
     }
     console.log("Ad-shield is on");
-
-    let lastUserClick = 0;
-    let clickedElement: HTMLElement | null = null;
-    let suspiciousRedirectCount = 0;
-
 
     const LEGITIMATE_POPUPS_INDICATORS: string[] = [
       "login",
@@ -75,42 +80,6 @@ export default defineContentScript({
       'iframe[src*="trafficjunky"]',
       'iframe[src*="popads"]',
     ];
-
-    // Define all functions first
-    const userJustClicked = () => {
-      return Date.now() - lastUserClick < 1500;
-    };
-
-    const isLegitimateClick = (e: HTMLElement | null): boolean => {
-      if (!e) return false;
-
-      // manual check to confirm if it is a download link
-      const href =
-        e.getAttribute("href") || e.closest("a")?.getAttribute("href") || "";
-
-      if (
-        href.includes("download") ||
-        href.includes(".mkv") ||
-        href.includes(".zip") ||
-        href.includes(".avi") ||
-        href.includes(".mp4")
-      ) {
-        return true;
-      }
-
-      const text = e.textContent?.toLowerCase() || "";
-      const legitimateKeywords = [
-        "download",
-        "login",
-        "sign in",
-        "register",
-        "buy",
-        "purchase",
-        "cart",
-        "checkout",
-      ];
-      return legitimateKeywords.some((keyword) => text.includes(keyword));
-    };
 
     const isLegitimatePopup = (element: HTMLElement): boolean => {
       const content = element.textContent?.toLowerCase() || "";
@@ -191,27 +160,6 @@ export default defineContentScript({
         }
       });
     };
-
-    // Now set up event listeners and main logic
-    document.addEventListener(
-      "click",
-      (e) => {
-        lastUserClick = Date.now();
-        clickedElement = e.target as HTMLElement;
-      },
-      true
-    );
-
-    browser.storage.onChanged.addListener((changes, area) => {
-      if (area === "local" && changes.blockerEnabled) {
-        const newValue = changes.blockerEnabled.newValue;
-        if (newValue) {
-          console.log("Ad blocker just turned ON");
-        } else {
-          console.log("Ad blocker just turned OFF");
-        }
-      }
-    });
 
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {

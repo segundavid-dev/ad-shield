@@ -8,8 +8,8 @@ export default defineConfig({
     description:
       "Light weight ad blocker that blocks intrusive ads, popups and malicious redirect for a smoother browsering experience",
     version: "1.0.0",
-    permissions: ["tabs", "scripting", "declarativeNetRequest", "storage"],
-    host_permissions: ["<all_urls>", "http://localhost/*"],
+    permissions: ["scripting", "declarativeNetRequest", "storage"],
+    host_permissions: ["<all_urls>"],
     action: {
       default_title: "Default Popup Title",
       default_popup: "popup.html",

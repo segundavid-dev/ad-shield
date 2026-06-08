@@ -1,14 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SwitchContext } from "./SwitchContext";
 
 export function SwitchProvider({ children }: { children: React.ReactNode }) {
   const [enabled, setEnabled] = useState(false);
-
-  if (enabled) {
-    console.log("active");
-  } else {
-    console.log("inactive");
-  }
+  const initialized = useRef(false);
 
   // load from storage on mount
   useEffect(() => {
@@ -17,12 +12,16 @@ export function SwitchProvider({ children }: { children: React.ReactNode }) {
         if (typeof res.blockerEnabled === "boolean") {
           setEnabled(res.blockerEnabled);
         }
+        initialized.current = true;
       });
+    } else {
+      initialized.current = true;
     }
   }, []);
 
-  // save to storage whenever it changes
+  // save to storage only after initial load to avoid overwriting persisted state
   useEffect(() => {
+    if (!initialized.current) return;
     if (typeof browser !== "undefined" && browser.storage) {
       browser.storage.local.set({ blockerEnabled: enabled });
     }

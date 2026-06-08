@@ -7,6 +7,13 @@ export default defineContentScript({
   main() {
     console.log("[AdShield] Interceptor active");
 
+    let blockerEnabled = false;
+
+    // Receive toggle state from isolated world (content.ts)
+    document.addEventListener("adshield:state", (e: Event) => {
+      blockerEnabled = (e as CustomEvent<{ enabled: boolean }>).detail.enabled;
+    });
+
     // Click tracking
     let lastUserClick = 0;
     document.addEventListener("click", () => {
@@ -37,6 +44,7 @@ export default defineContentScript({
     };
 
     intercept(window.location, 'assign', (original: Function, url: string) => {
+      if (!blockerEnabled) return original.call(window.location, url);
       if (isMaliciousUrl(url)) {
         console.log("[AdShield] Blocked malicious redirect (assign):", url);
         return;
@@ -49,6 +57,7 @@ export default defineContentScript({
     });
 
     intercept(window.location, 'replace', (original: Function, url: string) => {
+      if (!blockerEnabled) return original.call(window.location, url);
       if (isMaliciousUrl(url)) {
         console.log("[AdShield] Blocked malicious redirect (replace):", url);
         return;
@@ -62,6 +71,7 @@ export default defineContentScript({
 
     intercept(window, 'open', (original: Function, url?: string | URL, target?: string, features?: string) => {
       const urlString = url?.toString() || "";
+      if (!blockerEnabled) return original.call(window, url, target, features);
       if (urlString && isMaliciousUrl(urlString)) {
         console.log("[AdShield] Blocked malicious window.open:", urlString);
         return null;

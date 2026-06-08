@@ -1,5 +1,4 @@
 import { browser } from "wxt/browser";
-import { DEFAULT_MALICIOUS_DOMAINS } from "@/lib/ad-shield-utils";
 
 export default defineBackground(() => {
   console.log("Background running!");
@@ -11,9 +10,6 @@ export default defineBackground(() => {
     "popads.net", "ad-maven.com", "yllix.com", "revenuehits.com",
     "bitmedia.io", "coinzilla.com", "outbrain.com", "taboola.com"
   ];
-  const adSelectors: string[] = [];
-  const maliciousDomains = DEFAULT_MALICIOUS_DOMAINS;
-
   // Setup declarative blocking rules
   const setupBlockingRules = async () => {
     try {

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useSwitch } from "@/hooks/useSwitch";
 import ToggleSwitch from "./toggle-switch";
 import { ShieldOff, ShieldCheck } from "lucide-react";
