@@ -4,14 +4,14 @@ import { defineConfig } from "wxt";
 export default defineConfig({
   modules: ["@wxt-dev/module-react"],
   manifest: {
-    name: "Ad-shield",
+    name: "Ad-Shield",
     description:
-      "Light weight ad blocker that blocks intrusive ads, popups and malicious redirect for a smoother browsering experience",
+      "Lightweight ad blocker that blocks intrusive ads, popups, and malicious redirects for a smoother browsing experience.",
     version: "1.0.0",
     permissions: ["scripting", "declarativeNetRequest", "storage"],
     host_permissions: ["<all_urls>"],
     action: {
-      default_title: "Default Popup Title",
+      default_title: "Ad-Shield",
       default_popup: "popup.html",
     },
   },
