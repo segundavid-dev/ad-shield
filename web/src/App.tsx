@@ -1,4 +1,4 @@
-import { ShieldCheck, ShieldAlert, Zap, Globe, Github, Chrome } from "lucide-react";
+import { ShieldCheck, ShieldAlert, Zap, Globe, Globe2, Github, Chrome } from "lucide-react";
 
 function App() {
   return (
@@ -8,7 +8,7 @@ function App() {
         {/* Left Side: Hero Text */}
         <div className="space-y-6">
           <div className="inline-block bg-neo-success border-2 border-black px-4 py-1 font-black text-sm uppercase shadow-neo animate-bounce">
-            Live on Chrome Store
+            Live on Chrome & Edge
           </div>
           
           <h1 className="text-6xl md:text-8xl font-black uppercase leading-none tracking-tighter">
@@ -22,11 +22,20 @@ function App() {
           <div className="flex flex-wrap gap-4 pt-4">
             <button className="neo-button text-lg bg-neo-success hover:bg-neo-success/90">
               <Chrome size={24} strokeWidth={3} />
-              ADD TO CHOME
+              ADD TO CHROME
             </button>
-            <a 
-              href="https://github.com/segundavid-dev/ad-shield" 
-              target="_blank" 
+            <a
+              href="https://microsoftedge.microsoft.com/addons/detail/gafnehngpkiepciocndefdlmlgjhedbn"
+              target="_blank"
+              rel="noreferrer"
+              className="neo-button text-lg bg-neo-warning hover:bg-neo-warning/90"
+            >
+              <Globe2 size={24} strokeWidth={3} />
+              ADD TO EDGE
+            </a>
+            <a
+              href="https://github.com/segundavid-dev/ad-shield"
+              target="_blank"
               rel="noreferrer"
               className="neo-button text-lg bg-white"
             >
