@@ -42,38 +42,21 @@ export default defineContentScript({
     ];
 
     const AD_SELECTORS: string[] = [
-      // Google Ads
+      // Google Ads (precise selectors only)
       "ins.adsbygoogle",
       'iframe[src*="googlesyndication"]',
       'iframe[src*="googleadservices"]',
-      'iframe[src*="doubleclick"]',
+      'iframe[src*="doubleclick.net"]',
 
-      // Generic ad patterns
-      'iframe[src*="ads"]',
-      "[data-ad]",
-      "[data-ads]",
-      "[data-ad-slot]",
-
-      // Class based selectors
-      'div[class*="ad-"]',
-      'div[class*="ads-"]',
-      'div[class*="advertisement"]',
-      'div[class*="banner"]',
-      'div[class*="popup"]',
-      'div[class*="overlay"]',
+      // Specific ad class/id names
+      ".advertisement",
       ".ad-banner",
       ".ad-container",
-      ".advertisement",
       ".sponsored",
-
-      // ID based selectors
-      'div[id*="ad-"]',
-      'div[id*="ads-"]',
-      'div[id*="popup"]',
       "#advertisement",
-      "#banner",
+      "[data-ad-slot]",
 
-      // Common ad networks
+      // Known ad network iframes (exact network domains)
       'iframe[src*="propellerads"]',
       'iframe[src*="exoclick"]',
       'iframe[src*="juicyads"]',
@@ -101,12 +84,18 @@ export default defineContentScript({
 
       popups.forEach((el) => {
         if (!(el instanceof HTMLElement)) return;
+
+        // Never remove elements that contain or are media
+        if (el.querySelector("video, audio, canvas")) return;
+        if (el.tagName === "VIDEO" || el.tagName === "AUDIO") return;
+
         const style = window.getComputedStyle(el);
 
         if (
-          (style.position === "fixed" || style.position === "absolute") &&
+          style.position === "fixed" &&
           parseInt(style.zIndex) > 1000 &&
-          el.clientHeight > window.innerHeight * 0.5
+          el.clientHeight > window.innerHeight * 0.8 &&
+          !isLegitimatePopup(el)
         ) {
           console.log("Removing custom popup:", el);
           el.remove();
@@ -193,7 +182,6 @@ export default defineContentScript({
       if (link && link.href) {
         if (isMaliciousUrl(link.href)) {
           e.preventDefault();
-          e.stopPropagation();
         }
       }
     });

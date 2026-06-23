@@ -19,18 +19,12 @@ export const isMaliciousUrl = (url: string | URL | null | undefined, maliciousDo
       domain.includes(pattern)
     );
 
-    // check suspicious URL patterns
-    const hasSuspiciousParams =
-      search.includes("popup") ||
-      search.includes("redirect") ||
-      search.includes("affiliate");
-
     const suspiciousTlds = [".tk", ".ml", ".ga", ".cf", ".pw"];
     const hasSuspiciousTld = suspiciousTlds.some((tld) =>
       domain.endsWith(tld)
     );
 
-    return isDomainSuspicious || hasSuspiciousParams || hasSuspiciousTld;
+    return isDomainSuspicious || hasSuspiciousTld;
   } catch {
     return false;
   }
